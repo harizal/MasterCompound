@@ -1,24 +1,34 @@
 ﻿using MasterCompound.Models;
+using MasterCompound.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using static MasterCompound.Utils.Constants;
 
 namespace MasterCompound.Services
 {
     public static class DataService
     {
-        private static readonly string _Url = "http://58.26.126.39/WebserviceDataMaster/servicecompound.asmx/";
-        private static readonly string _Key = "string";
+        private static readonly string _DefaultUrl = "http://58.26.126.39/WebserviceDataMaster/servicecompound.asmx/";
+        private static readonly string _DefaultKey = "string";
 
         private static async Task<BaseModel<T>> GetAsync<T>(string endPoint)
         {
+            var webServiceUrl = SharedPreferences.GetString(SharedPreferencesKeys.Url);
+            if (string.IsNullOrEmpty(webServiceUrl))
+                webServiceUrl = _DefaultUrl;
+
+            var webServiceKey = SharedPreferences.GetString(SharedPreferencesKeys.Key);
+            if(string.IsNullOrEmpty(webServiceKey))
+                webServiceKey = _DefaultKey;
+
             var result = new BaseModel<T>();
             try
             {
                 using HttpClient httpClient = new HttpClient();
-                string url = $"{_Url}{endPoint}?key={_Key}";
+                string url = $"{webServiceUrl}{endPoint}?key={webServiceKey}";
 
                 HttpResponseMessage response = await httpClient.GetAsync(url);
 
@@ -89,6 +99,21 @@ namespace MasterCompound.Services
         public static async Task<BaseModel<List<KodSita>>> GetKodSita()
         {
             return await GetAsync<List<KodSita>>("GetKodSita");
+        }
+
+        public static async Task<BaseModel<List<Enforcer>>> GetEnforcer()
+        {
+            return await GetAsync<List<Enforcer>>("GetEnforcer");
+        }
+
+        public static async Task<BaseModel<List<Jalan>>> GetJalan()
+        {
+            return await GetAsync<List<Jalan>>("GetJalan");
+        }
+
+        public static async Task<BaseModel<List<ButirSalah>>> GetButirSalah()
+        {
+            return await GetAsync<List<ButirSalah>>("GetButirSalah");
         }
     }
 }

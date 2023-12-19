@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ConfigApp>
+	<Key>string</Key>
+	<WebServiceUrl>http://58.26.126.39/WebserviceDataMaster/servicecompound.asmx/</WebServiceUrl>
+</ConfigApp>
